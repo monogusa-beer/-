@@ -175,7 +175,7 @@ body {
 	display: grid;
 	grid-template-rows: 1fr 1fr 1fr 1fr;
 	grid-template-columns: 1fr 1fr 1fr 1fr;
-	grid-gap: 12px;
+	grid-gap: 2.5%;
 	margin-bottom: 12px;
 }
 
@@ -259,10 +259,14 @@ body {
 	text-align: center;
 	height: 72px;
 	line-height: 72px;
-	background-color: #EA226D;
 	border-radius: 4px;
+	background-color: #b8b8b8;
 	color: #feffff;
 	font-size: 30px;
 	font-weight: bold;
+}
+
+.generate.active {
+	background-color: #EA226D;
 	box-shadow: rgba(0,0,0,0.15) 0 3px 6px;
 }

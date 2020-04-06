@@ -3,13 +3,17 @@
 const numButtons = document.querySelectorAll(".number-button")
 const setButton = document.getElementById("setButton");
 const clearButton = document.getElementById("clearButton");
+const generateButton = document.getElementById("generateButton");
 const minNumPanel = document.getElementById("minNumPanel");
 const maxNumPanel = document.getElementById("maxNumPanel");
+const mainPanel = document.getElementById("mainPanel");
 
 let minNum = "";
 let maxNum = "";
 let minNumPanelStatus = "waiting";
 let maxNumPanelStatus;
+let noRepeat = false;
+let generatedNum;
 
 let inputNum = function(num,minOrMax) {
 	if (minOrMax === "min") {
@@ -72,16 +76,21 @@ numButtons.forEach((numButton,index) => {
 setButton.addEventListener('click', () => {
 	if(minNumPanelStatus === "active") {
 		minNumPanel.classList.remove("active");
-		minNumPanelStatus = "";
+		minNumPanelStatus = "set";
 		maxNumPanel.classList.add("waiting");
 		maxNumPanelStatus = "waiting";
 		maxNumPanel.textContent = "|";
 	}
 	if(maxNumPanelStatus === "active") {
 		maxNumPanel.classList.remove("active");
-		maxNumPanelStatus = "";
+		maxNumPanelStatus = "set";
+		minNum = Number(minNum);
+		maxNum = Number(maxNum);
+		if(minNum <= maxNum) {
+			generateButton.classList.add("active");
+		}
 	}
-})
+});
 
 clearButton.addEventListener('click', () => {
 	minNumPanelStatus = "waiting";
@@ -102,5 +111,17 @@ clearButton.addEventListener('click', () => {
 	if (maxNumPanel.classList.contains("waiting")) {
 		maxNumPanel.classList.remove("waiting");
 	}
-})
+});
+
+
+generateButton.addEventListener('click', () => {
+	if(!generateButton.classList.contains("active")) {
+		return;
+	}
+	let generateRandomNumber = function(min,max) {
+		return Math.floor(Math.random() * (max + 1 - min)) + min;
+	};
+	generatedNum = generateRandomNumber(minNum,maxNum);
+	mainPanel.textContent = generatedNum;
+});
 
