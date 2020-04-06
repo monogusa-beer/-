@@ -111,6 +111,10 @@ clearButton.addEventListener('click', () => {
 	if (maxNumPanel.classList.contains("waiting")) {
 		maxNumPanel.classList.remove("waiting");
 	}
+	mainPanel.textContent = "乱数"
+	if (generateButton.classList.contains("active")) {
+		generateButton.classList.remove("active");
+	}
 });
 
 
