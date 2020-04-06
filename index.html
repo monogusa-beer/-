@@ -44,11 +44,11 @@
 		<div class="setNums">
 			<div class="setNum">
 				<p class="setNum-text">最小</p>
-				<p class="setNum-number">0</p>
+				<p id="minNumPanel" class="setNum-number waiting">|</p>
 			</div>
 			<div class="setNum">
 				<p class="setNum-text">最大</p>
-				<p class="setNum-number">100</p>
+				<p id="maxNumPanel" class="setNum-number"></p>
 			</div>
 		</div>
 		<div class="settings">
@@ -59,20 +59,22 @@
 			</div>
 		</div>
 		<div class="inputs">
-			<div class="number-button"><span class="button-text">0</span></div>
-			<div class="number-button"><span class="button-text">1</span></div>
-			<div class="number-button"><span class="button-text">2</span></div>
-			<div class="number-button"><span class="button-text">3</span></div>
-			<div class="number-button"><span class="button-text">4</span></div>
-			<div class="number-button"><span class="button-text">5</span></div>
-			<div class="number-button"><span class="button-text">6</span></div>
-			<div class="number-button"><span class="button-text">7</span></div>
-			<div class="number-button"><span class="button-text">8</span></div>
-			<div class="number-button"><span class="button-text">9</span></div>
-			<div class="clear-button"><span class="button-text">C</span></div>
-			<div class="set-button"><span class="button-text">set</span></div>
+			<button type="button" value="0" class="number-button">0</button>
+			<button type="button" value="1" class="number-button">1</button>
+			<button type="button" value="2" class="number-button">2</button>
+			<button type="button" value="3" class="number-button">3</button>
+			<button type="button" value="4" class="number-button">4</button>
+			<button type="button" value="5" class="number-button">5</button>
+			<button type="button" value="6" class="number-button">6</button>
+			<button type="button" value="7" class="number-button">7</button>
+			<button type="button" value="8" class="number-button">8</button>
+			<button type="button" value="9" class="number-button">9</button>
+			<button id="clearButton" type="button" class="clear-button"><span class="button-text">C</span></button>
+			<button id="setButton" type="button" class="set-button"><span class="button-text">set</span></button>
 		</div>
 		<div class="generate">生成</div>
 	</main>
+
+	<script src="/js/script.js"></script>
 </body>
 </html>
