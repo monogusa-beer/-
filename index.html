@@ -12,10 +12,6 @@
 	<main class="main">
 		<div class="panel">
 			<div id="mainPanel" class="panel-number">乱数</div>
-			<!-- <div class="panel-reset">
-				<i class="fas fa-redo"></i>
-				<div>reset</div>
-			</div> -->
 		</div>
 		<div class="history">
 			<dl id="historyList" class="history-list">
@@ -35,10 +31,10 @@
 		</div>
 		<div class="settings">
 			<p class="settings-text">同じ数字を出さない</p>
-			<div class="settings-toggle">
-				<input class="toggle-input" type="checkbox" />
+			<form class="settings-toggle">
+				<input id="duplicationToggle" class="toggle-input" type="checkbox" />
 				<label class="toggle-label"></label>
-			</div>
+			</form>
 		</div>
 		<div class="inputs">
 			<button type="button" class="number-button">0</button>

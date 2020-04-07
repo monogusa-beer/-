@@ -5,12 +5,12 @@
 	const setButton = document.getElementById("setButton");
 	const generateButton = document.getElementById("generateButton");
 	const mainPanel = document.getElementById("mainPanel");
+	const historyList = document.getElementById("historyList");
+	const duplicationToggle = document.getElementById("duplicationToggle")
 	let minNum;
 	let maxNum;
-
-	const historyList = document.getElementById("historyList");
 	let generateCount = 0;
-
+	let numList = [];
 
 	class NumPanel {
 		constructor(id) {
@@ -148,6 +148,7 @@
 		mainPanel.textContent = "乱数"
 		generateCount = 0;
 		while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
+		numList = [];
 	});
 
 	minPanel.element.addEventListener('click', () => {
@@ -186,6 +187,15 @@
 		}
 	});
 
+	duplicationToggle.addEventListener('click', () => {
+		if (generateCount > 0) {
+			mainPanel.textContent = "乱数"
+			generateCount = 0;
+			while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
+			numList = [];
+		}
+	});
+
 	generateButton.addEventListener('click', () => {
 		if(!generateButton.classList.contains("active")) {
 			return;
@@ -193,9 +203,30 @@
 		minPanel.setSet();
 		maxPanel.setSet();
 
-		let generatedNum = generateRandomNumber(minNum, maxNum);
-		mainPanel.textContent = generatedNum;
-		generateCount ++;
-		setHistory(generatedNum,generateCount);
+		if (duplicationToggle.checked) {
+			if(numList[0] === "finish") {
+				mainPanel.textContent = "finish";
+				return;
+			}
+			if(numList.length === 0) {
+				for (let i = minNum; i <= maxNum; i++) {
+					numList.push(i);
+				}
+			}
+			let r = Math.floor(Math.random() * numList.length);
+			let generatedNum = numList[r];
+			mainPanel.textContent = generatedNum;
+			numList.splice(r,1);
+			generateCount ++;
+			setHistory(generatedNum,generateCount);
+			if(numList.length === 0) {
+				numList.push("finish");
+			}
+		} else {
+			let generatedNum = generateRandomNumber(minNum, maxNum);
+			mainPanel.textContent = generatedNum;
+			generateCount ++;
+			setHistory(generatedNum,generateCount);
+		}
 	});
 }
