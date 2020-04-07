@@ -99,11 +99,13 @@
 	const maxPanel= new NumPanel("maxPanel");
 	maxPanel.setInactive();
 
-	let checkNum = function() {
+	let checkNum = () => {
 		minNum = Number(minPanel.element.textContent);
 		maxNum = Number(maxPanel.element.textContent);
 		if(minNum !== NaN && maxNum !== NaN && minNum < maxNum) {
 			generateButton.classList.add("active");
+		} else if(generateButton.classList.contains("active")) {
+			generateButton.classList.remove("active");
 		}
 	}
 
@@ -123,6 +125,13 @@
 		historyItem.appendChild(historyOrder);
 		historyItem.appendChild(historyNumber);
 		historyList.appendChild(historyItem);
+	}
+
+	let resetNum = () => {
+		mainPanel.textContent = "乱数"
+		generateCount = 0;
+		while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
+		numList = [];
 	}
 
 	numButtons.forEach((numButton,index) => {
@@ -157,13 +166,11 @@
 		if(generateButton.classList.contains("active")) {
 			generateButton.classList.remove("active");
 		}
-		mainPanel.textContent = "乱数"
-		generateCount = 0;
-		while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
-		numList = [];
+		resetNum();
 	});
 
 	minPanel.element.addEventListener('click', () => {
+		resetNum();
 		switch(maxPanel.getStatus()) {
 			case "waiting":
 				maxPanel.setInactive();
@@ -172,10 +179,20 @@
 			case "active":
 				maxPanel.setSet();
 				minPanel.setWaiting();
+				if(generateButton.classList.contains("active")) {
+					generateButton.classList.remove("active");
+				}
+				break;
+			case "set":
+				minPanel.setWaiting();
+				if(generateButton.classList.contains("active")) {
+					generateButton.classList.remove("active");
+				}
 		}
 	});
 
 	maxPanel.element.addEventListener('click', () => {
+		resetNum();
 		switch(minPanel.getStatus()) {
 			case "waiting":
 				minPanel.setNum("0");
@@ -186,6 +203,11 @@
 				minPanel.setSet();
 				maxPanel.setWaiting();
 				break;
+			case "set":
+				maxPanel.setWaiting();
+				if(generateButton.classList.contains("active")) {
+					generateButton.classList.remove("active");
+				}
 		}
 	});
 
@@ -201,10 +223,7 @@
 
 	duplicationToggle.addEventListener('click', () => {
 		if (generateCount > 0) {
-			mainPanel.textContent = "乱数"
-			generateCount = 0;
-			while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
-			numList = [];
+			resetNum();
 		}
 	});
 
