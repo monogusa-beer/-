@@ -147,7 +147,7 @@
 		}
 		mainPanel.textContent = "乱数"
 		generateCount = 0;
-		while (historyList.firstChild) historyList.removeChild(historyList.firstChild);
+		while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
 	});
 
 	minPanel.element.addEventListener('click', () => {
