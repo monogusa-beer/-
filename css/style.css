@@ -90,7 +90,8 @@ body {
 .setNum-number {
 	font-size: 30px;
 	width: 120px;
-	height: 32px;
+	height: 40px;
+	line-height: 40px;
 	color: #3A4043;
 }
 
@@ -173,13 +174,13 @@ body {
 }
 
 .inputs {
-	width: 100%;
+	width: 90%;
 	height: 40vh;
 	display: grid;
 	grid-template-rows: 1fr 1fr 1fr 1fr;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-	grid-gap: 2.5%;
-	margin-bottom: 12px;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-gap: 3%;
+	margin: 0 auto 12px;
 }
 
 .number-button, .clear-button, .set-button {
@@ -191,16 +192,6 @@ body {
 .number-button {
 	background-color: #EEF3F4;
 	color: #70767C;
-}
-
-.clear-button {
-	background-color: #70767C;
-	color: #feffff;
-}
-
-.set-button {
-	background-color: #3E86F6;
-	color: #feffff;
 }
 
 .button-text {
@@ -250,11 +241,9 @@ body {
 }
 
 .clear-button {
-	grid-area: 1/4/3/5;
-}
-
-.set-button {
-	grid-area: 3/4/5/5;
+	background-color: #70767C;
+	color: #feffff;
+	grid-area: 4/3/5/4;
 }
 
 .generate {

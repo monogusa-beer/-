@@ -1,11 +1,11 @@
 'use strict';
 {
-
 	const numButtons = document.querySelectorAll(".number-button")
-	const setButton = document.getElementById("setButton");
 	const clearButton = document.getElementById("clearButton");
 	const generateButton = document.getElementById("generateButton");
 	const mainPanel = document.getElementById("mainPanel");
+	let minNum;
+	let maxNum;
 
 	class NumPanel {
 		constructor(id) {
@@ -38,9 +38,6 @@
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
 			}
-			if(this.htmlClass.contains("active")) {
-				this.htmlClass.remove("active");
-			}
 		}
 
 		setWaiting() {
@@ -50,16 +47,11 @@
 			if(!this.htmlClass.contains("waiting")) {
 				this.htmlClass.add("waiting")
 			}
-			if(this.htmlClass.contains("active")) {
-				this.htmlClass.remove("active");
-			}
 		}
 
 		setActive() {
 			this.status = "active";
 			this.element.textContent = this.num;
-			if(!this.htmlClass.contains("active"))
-			this.htmlClass.add("active");
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
 			}
@@ -67,13 +59,9 @@
 
 		setSet() {
 			this.status ="set";
-			this.num = Number(this.num);
 			this.element.textContent = this.num;
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
-			}
-			if(this.htmlClass.contains("active")) {
-				this.htmlClass.remove("active");
 			}
 		}
 
@@ -116,20 +104,13 @@
 					maxPanel.setActive();
 					break;
 			}
-		});
-	});
 
-	setButton.addEventListener('click', () => {
-		if(minPanel.getStatus() === "active") {
-			minPanel.setSet();
-			maxPanel.setWaiting();
-		}
-		if(maxPanel.getStatus() === "active") {
-			maxPanel.setSet();
-			if(minPanel.getNum() <= maxPanel.getNum()) {
+			minNum = Number(minPanel.element.textContent);
+			maxNum = Number(maxPanel.element.textContent);
+			if(minNum !== NaN && maxNum !== NaN && minNum < maxNum) {
 				generateButton.classList.add("active");
 			}
-		}
+		});
 	});
 
 	clearButton.addEventListener('click', () => {
@@ -173,7 +154,7 @@
 		let generateRandomNumber = function(min,max) {
 			return Math.floor(Math.random() * (max + 1 - min)) + min;
 		};
-		let generatedNum = generateRandomNumber(minPanel.getNum(), maxPanel.getNum());
+		let generatedNum = generateRandomNumber(minNum, maxNum);
 		mainPanel.textContent = generatedNum;
 	});
 }
