@@ -5,12 +5,12 @@
 	const setButton = document.getElementById("setButton");
 	const generateButton = document.getElementById("generateButton");
 	const mainPanel = document.getElementById("mainPanel");
+	const historyList = document.getElementById("historyList");
+	const duplicationToggle = document.getElementById("duplicationToggle")
 	let minNum;
 	let maxNum;
-
-	const historyList = document.getElementById("historyList");
 	let generateCount = 0;
-
+	let numList = [];
 
 	class NumPanel {
 		constructor(id) {
@@ -43,6 +43,9 @@
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
 			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
+			}
 		}
 
 		setWaiting() {
@@ -52,6 +55,9 @@
 			if(!this.htmlClass.contains("waiting")) {
 				this.htmlClass.add("waiting")
 			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
+			}
 		}
 
 		setActive() {
@@ -60,6 +66,9 @@
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
 			}
+			if(!this.htmlClass.contains("active")) {
+				this.htmlClass.add("active")
+			}
 		}
 
 		setSet() {
@@ -67,6 +76,9 @@
 			this.element.textContent = this.num;
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
+			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
 			}
 		}
 
@@ -87,11 +99,13 @@
 	const maxPanel= new NumPanel("maxPanel");
 	maxPanel.setInactive();
 
-	let checkNum = function() {
+	let checkNum = () => {
 		minNum = Number(minPanel.element.textContent);
 		maxNum = Number(maxPanel.element.textContent);
 		if(minNum !== NaN && maxNum !== NaN && minNum < maxNum) {
 			generateButton.classList.add("active");
+		} else if(generateButton.classList.contains("active")) {
+			generateButton.classList.remove("active");
 		}
 	}
 
@@ -111,6 +125,13 @@
 		historyItem.appendChild(historyOrder);
 		historyItem.appendChild(historyNumber);
 		historyList.appendChild(historyItem);
+	}
+
+	let resetNum = () => {
+		mainPanel.textContent = "乱数"
+		generateCount = 0;
+		while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
+		numList = [];
 	}
 
 	numButtons.forEach((numButton,index) => {
@@ -145,12 +166,11 @@
 		if(generateButton.classList.contains("active")) {
 			generateButton.classList.remove("active");
 		}
-		mainPanel.textContent = "乱数"
-		generateCount = 0;
-		while(historyList.firstChild) historyList.removeChild(historyList.firstChild);
+		resetNum();
 	});
 
 	minPanel.element.addEventListener('click', () => {
+		resetNum();
 		switch(maxPanel.getStatus()) {
 			case "waiting":
 				maxPanel.setInactive();
@@ -159,10 +179,20 @@
 			case "active":
 				maxPanel.setSet();
 				minPanel.setWaiting();
+				if(generateButton.classList.contains("active")) {
+					generateButton.classList.remove("active");
+				}
+				break;
+			case "set":
+				minPanel.setWaiting();
+				if(generateButton.classList.contains("active")) {
+					generateButton.classList.remove("active");
+				}
 		}
 	});
 
 	maxPanel.element.addEventListener('click', () => {
+		resetNum();
 		switch(minPanel.getStatus()) {
 			case "waiting":
 				minPanel.setNum("0");
@@ -173,6 +203,11 @@
 				minPanel.setSet();
 				maxPanel.setWaiting();
 				break;
+			case "set":
+				maxPanel.setWaiting();
+				if(generateButton.classList.contains("active")) {
+					generateButton.classList.remove("active");
+				}
 		}
 	});
 
@@ -186,6 +221,12 @@
 		}
 	});
 
+	duplicationToggle.addEventListener('click', () => {
+		if (generateCount > 0) {
+			resetNum();
+		}
+	});
+
 	generateButton.addEventListener('click', () => {
 		if(!generateButton.classList.contains("active")) {
 			return;
@@ -193,9 +234,30 @@
 		minPanel.setSet();
 		maxPanel.setSet();
 
-		let generatedNum = generateRandomNumber(minNum, maxNum);
-		mainPanel.textContent = generatedNum;
-		generateCount ++;
-		setHistory(generatedNum,generateCount);
+		if (duplicationToggle.checked) {
+			if(numList[0] === "finish") {
+				mainPanel.textContent = "finish";
+				return;
+			}
+			if(numList.length === 0) {
+				for (let i = minNum; i <= maxNum; i++) {
+					numList.push(i);
+				}
+			}
+			let r = Math.floor(Math.random() * numList.length);
+			let generatedNum = numList[r];
+			mainPanel.textContent = generatedNum;
+			numList.splice(r,1);
+			generateCount ++;
+			setHistory(generatedNum,generateCount);
+			if(numList.length === 0) {
+				numList.push("finish");
+			}
+		} else {
+			let generatedNum = generateRandomNumber(minNum, maxNum);
+			mainPanel.textContent = generatedNum;
+			generateCount ++;
+			setHistory(generatedNum,generateCount);
+		}
 	});
 }
