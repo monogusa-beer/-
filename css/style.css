@@ -7,6 +7,10 @@ button {
 	appearance: none;
 }
 
+hr {
+	margin: 0;
+}
+
 *, *:before, *:after {
 	box-sizing: border-box;
 	-moz-user-select: none;
@@ -57,25 +61,33 @@ body {
 }
 
 .history {
-	height: fit-content;
+	height: 64px;
 	border-radius: 4px;
 	border: solid 1px #3A4043;
 	margin-bottom: 20px;
-	padding: 12px;
+	padding-top: 8px;
 }
 
 .history-list {
 	display: flex;
-	justify-content: space-around;
 	text-align: center;
+	justify-content: flex-end;
+	overflow: scroll;
+}
+
+.history-list-item {
+	padding-right: 16px;
+	padding-left: 16px;
 }
 
 .history-list-order {
-	color: #DCE1E4;
+	font-size: 12px;
+	color: #8b8989;
 	margin-bottom: 4px;
 }
 
 .history-list-number {
+	color: #3A4043;
 	font-size: 24px;
 }
 
@@ -88,7 +100,6 @@ body {
 
 .setNum-text {
 	font-size: 14px;
-	margin-bottom: 8px;
 	width: 120px;
 }
 
@@ -98,6 +109,7 @@ body {
 	height: 40px;
 	line-height: 40px;
 	color: #3A4043;
+	position: relative;
 }
 
 .setNum-number.waiting {
@@ -171,7 +183,7 @@ body {
 }
 
 .toggle-input:checked + .toggle-label {
-    background-color: #4BD865;
+    background-color: #3E86F6;
   }
 
 .toggle-input:checked + .toggle-label:after {

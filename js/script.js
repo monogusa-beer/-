@@ -8,6 +8,10 @@
 	let minNum;
 	let maxNum;
 
+	const historyList = document.getElementById("historyList");
+	let generateCount = 0;
+
+
 	class NumPanel {
 		constructor(id) {
 			this.element = document.getElementById(id);
@@ -83,6 +87,32 @@
 	const maxPanel= new NumPanel("maxPanel");
 	maxPanel.setInactive();
 
+	let checkNum = function() {
+		minNum = Number(minPanel.element.textContent);
+		maxNum = Number(maxPanel.element.textContent);
+		if(minNum !== NaN && maxNum !== NaN && minNum < maxNum) {
+			generateButton.classList.add("active");
+		}
+	}
+
+	let generateRandomNumber = function(min,max) {
+		return Math.floor(Math.random() * (max + 1 - min)) + min;
+	};
+
+	let setHistory = function(num,order) {
+		let historyItem = document.createElement("div");
+		let historyOrder = document.createElement("dt");
+		let historyNumber = document.createElement("dd");
+		historyItem.classList.add("history-list-item");
+		historyOrder.classList.add("history-list-order");
+		historyNumber.classList.add("history-list-number");
+		historyOrder.textContent = order;
+		historyNumber.textContent = num;
+		historyItem.appendChild(historyOrder);
+		historyItem.appendChild(historyNumber);
+		historyList.appendChild(historyItem);
+	}
+
 	numButtons.forEach((numButton,index) => {
 		numButton.addEventListener("click", () => {
 			switch(minPanel.getStatus()) {
@@ -109,20 +139,15 @@
 		});
 	});
 
-	let checkNum = function() {
-		minNum = Number(minPanel.element.textContent);
-		maxNum = Number(maxPanel.element.textContent);
-		if(minNum !== NaN && maxNum !== NaN && minNum < maxNum) {
-			generateButton.classList.add("active");
-		}
-	}
-
 	clearButton.addEventListener('click', () => {
 		minPanel.setWaiting();
 		maxPanel.setInactive();
 		if(generateButton.classList.contains("active")) {
 			generateButton.classList.remove("active");
 		}
+		mainPanel.textContent = "乱数"
+		generateCount = 0;
+		while (historyList.firstChild) historyList.removeChild(historyList.firstChild);
 	});
 
 	minPanel.element.addEventListener('click', () => {
@@ -165,15 +190,12 @@
 		if(!generateButton.classList.contains("active")) {
 			return;
 		}
-
 		minPanel.setSet();
 		maxPanel.setSet();
 
-		let generateRandomNumber = function(min,max) {
-			return Math.floor(Math.random() * (max + 1 - min)) + min;
-		};
 		let generatedNum = generateRandomNumber(minNum, maxNum);
 		mainPanel.textContent = generatedNum;
-
+		generateCount ++;
+		setHistory(generatedNum,generateCount);
 	});
 }
