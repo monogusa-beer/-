@@ -43,6 +43,9 @@
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
 			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
+			}
 		}
 
 		setWaiting() {
@@ -52,6 +55,9 @@
 			if(!this.htmlClass.contains("waiting")) {
 				this.htmlClass.add("waiting")
 			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
+			}
 		}
 
 		setActive() {
@@ -60,6 +66,9 @@
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
 			}
+			if(!this.htmlClass.contains("active")) {
+				this.htmlClass.add("active")
+			}
 		}
 
 		setSet() {
@@ -67,6 +76,9 @@
 			this.element.textContent = this.num;
 			if(this.htmlClass.contains("waiting")) {
 				this.htmlClass.remove("waiting");
+			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
 			}
 		}
 
