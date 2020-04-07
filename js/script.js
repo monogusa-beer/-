@@ -6,7 +6,6 @@
 	const clearButton = document.getElementById("clearButton");
 	const generateButton = document.getElementById("generateButton");
 	const mainPanel = document.getElementById("mainPanel");
-	let generatedNum;
 
 	class NumPanel {
 		constructor(id) {
@@ -22,6 +21,10 @@
 
 		getNum() {
 			return this.num;
+		}
+
+		setNum(num) {
+			this.num = num;
 		}
 
 		getStatus() {
@@ -123,7 +126,7 @@
 		}
 		if(maxPanel.getStatus() === "active") {
 			maxPanel.setSet();
-			if(minPanel.num <= maxPanel.num) {
+			if(minPanel.getNum() <= maxPanel.getNum()) {
 				generateButton.classList.add("active");
 			}
 		}
@@ -132,6 +135,35 @@
 	clearButton.addEventListener('click', () => {
 		minPanel.setWaiting();
 		maxPanel.setInactive();
+		if(generateButton.classList.contains("active")) {
+			generateButton.classList.remove("active");
+		}
+	});
+
+	minPanel.element.addEventListener('click', () => {
+		switch(maxPanel.getStatus()) {
+			case "waiting":
+				maxPanel.setInactive();
+				minPanel.setWaiting();
+				break;
+			case "active":
+				maxPanel.setSet();
+				minPanel.setWaiting();
+		}
+	});
+
+	maxPanel.element.addEventListener('click', () => {
+		switch(minPanel.getStatus()) {
+			case "waiting":
+				minPanel.setNum("0");
+				minPanel.setSet();
+				maxPanel.setWaiting();
+				break;
+			case "active":
+				minPanel.setSet();
+				maxPanel.setWaiting();
+				break;
+		}
 	});
 
 	generateButton.addEventListener('click', () => {
@@ -141,7 +173,7 @@
 		let generateRandomNumber = function(min,max) {
 			return Math.floor(Math.random() * (max + 1 - min)) + min;
 		};
-		generatedNum = generateRandomNumber(minPanel.num, maxPanel.num);
+		let generatedNum = generateRandomNumber(minPanel.getNum(), maxPanel.getNum());
 		mainPanel.textContent = generatedNum;
 	});
 }

@@ -89,6 +89,8 @@ body {
 
 .setNum-number {
 	font-size: 30px;
+	width: 120px;
+	height: 32px;
 	color: #3A4043;
 }
 
