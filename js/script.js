@@ -1,131 +1,147 @@
 'use strict';
+{
 
-const numButtons = document.querySelectorAll(".number-button")
-const setButton = document.getElementById("setButton");
-const clearButton = document.getElementById("clearButton");
-const generateButton = document.getElementById("generateButton");
-const minNumPanel = document.getElementById("minNumPanel");
-const maxNumPanel = document.getElementById("maxNumPanel");
-const mainPanel = document.getElementById("mainPanel");
+	const numButtons = document.querySelectorAll(".number-button")
+	const setButton = document.getElementById("setButton");
+	const clearButton = document.getElementById("clearButton");
+	const generateButton = document.getElementById("generateButton");
+	const mainPanel = document.getElementById("mainPanel");
+	let generatedNum;
 
-let minNum = "";
-let maxNum = "";
-let minNumPanelStatus = "waiting";
-let maxNumPanelStatus;
-let noRepeat = false;
-let generatedNum;
+	class NumPanel {
+		constructor(id) {
+			this.element = document.getElementById(id);
+			this.num = "";
+			this.status;
+			this.htmlClass = this.element.classList;
+		}
 
-let inputNum = function(num,minOrMax) {
-	if (minOrMax === "min") {
-		if (minNum.length === 6) {
-			return;
+		getElement() {
+			return this.element;
 		}
-		if(minNum === "0") {
-			minNum = `${num}`;
-			minNumPanel.textContent = minNum;
-			return;
+
+		getNum() {
+			return this.num;
 		}
-		minNum += num;
-		minNumPanel.textContent = minNum;
-	} else if (minOrMax === "max") {
-		if (maxNum.length === 6) {
-			return;
+
+		getStatus() {
+			return this.status;
 		}
-		if(maxNum === "0") {
-			maxNum = `${num}`;
-			maxNumPanel.textContent = maxNum;
-			return;
+
+		setInactive() {
+			this.status = "inactive";
+			this.num = "";
+			this.element.textContent = "";
+			if(this.htmlClass.contains("waiting")) {
+				this.htmlClass.remove("waiting");
+			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
+			}
 		}
-		maxNum += num;
-		maxNumPanel.textContent = maxNum;
+
+		setWaiting() {
+			this.status = "waiting";
+			this.num = "";
+			this.element.textContent = "|";
+			if(!this.htmlClass.contains("waiting")) {
+				this.htmlClass.add("waiting")
+			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
+			}
+		}
+
+		setActive() {
+			this.status = "active";
+			this.element.textContent = this.num;
+			if(!this.htmlClass.contains("active"))
+			this.htmlClass.add("active");
+			if(this.htmlClass.contains("waiting")) {
+				this.htmlClass.remove("waiting");
+			}
+		}
+
+		setSet() {
+			this.status ="set";
+			this.num = Number(this.num);
+			this.element.textContent = this.num;
+			if(this.htmlClass.contains("waiting")) {
+				this.htmlClass.remove("waiting");
+			}
+			if(this.htmlClass.contains("active")) {
+				this.htmlClass.remove("active");
+			}
+		}
+
+		inputNum(num) {
+			if(this.num.length === 6) {
+				return;
+			}
+			if(this.num === "0") {
+				this.num = `${num}`;
+				return;
+			}
+			this.num += num;
+		};
 	}
-};
 
-numButtons.forEach((numButton,index) => {
-	numButton.addEventListener("click", () => {
-		switch(minNumPanelStatus) {
-			case "waiting":
-				minNumPanel.classList.remove("waiting");
-				minNumPanel.classList.add("active");
-				inputNum(index,"min");
-				minNumPanelStatus = "active";
-				break;
-			case "active":
-				inputNum(index,"min");
-				break;
-			default:
-				break;
-		}
-		switch(maxNumPanelStatus) {
-			case "waiting":
-				maxNumPanel.classList.remove("waiting");
-				maxNumPanel.classList.add("active");
-				inputNum(index,"max");
-				maxNumPanelStatus = "active";
-				break;
-			case "active":
-				inputNum(index,"max");
-				break;
-			default:
-				break;
-		}
+	const minPanel = new NumPanel("minPanel");
+	minPanel.setWaiting();
+	const maxPanel= new NumPanel("maxPanel");
+	maxPanel.setInactive();
 
+	numButtons.forEach((numButton,index) => {
+		numButton.addEventListener("click", () => {
+			switch(minPanel.getStatus()) {
+				case "waiting":
+					minPanel.inputNum(index);
+					minPanel.setActive();
+					break;
+				case "active":
+					minPanel.inputNum(index);
+					minPanel.setActive();
+					break;
+			}
+			switch(maxPanel.getStatus()) {
+				case "waiting":
+					maxPanel.inputNum(index);
+					maxPanel.setActive();
+					break;
+				case "active":
+					maxPanel.inputNum(index);
+					maxPanel.setActive();
+					break;
+			}
+		});
 	});
-});
 
-setButton.addEventListener('click', () => {
-	if(minNumPanelStatus === "active") {
-		minNumPanel.classList.remove("active");
-		minNumPanelStatus = "set";
-		maxNumPanel.classList.add("waiting");
-		maxNumPanelStatus = "waiting";
-		maxNumPanel.textContent = "|";
-	}
-	if(maxNumPanelStatus === "active") {
-		maxNumPanel.classList.remove("active");
-		maxNumPanelStatus = "set";
-		minNum = Number(minNum);
-		maxNum = Number(maxNum);
-		if(minNum <= maxNum) {
-			generateButton.classList.add("active");
+	setButton.addEventListener('click', () => {
+		if(minPanel.getStatus() === "active") {
+			minPanel.setSet();
+			maxPanel.setWaiting();
 		}
-	}
-});
+		if(maxPanel.getStatus() === "active") {
+			maxPanel.setSet();
+			if(minPanel.num <= maxPanel.num) {
+				generateButton.classList.add("active");
+			}
+		}
+	});
 
-clearButton.addEventListener('click', () => {
-	minNumPanelStatus = "waiting";
-	minNumPanel.textContent = "|"
-	minNum = "";
-	if (minNumPanel.classList.contains("active")) {
-		minNumPanel.classList.remove("active");
-	}
-	if (!minNumPanel.classList.contains("waiting")) {
-		minNumPanel.classList.add("waiting");
-	}
-	maxNumPanelStatus = "";
-	maxNumPanel.textContent = "";
-	maxNum = "";
-	if (maxNumPanel.classList.contains("active")) {
-		maxNumPanel.classList.remove("active");
-	}
-	if (maxNumPanel.classList.contains("waiting")) {
-		maxNumPanel.classList.remove("waiting");
-	}
-	mainPanel.textContent = "乱数"
-	if (generateButton.classList.contains("active")) {
-		generateButton.classList.remove("active");
-	}
-});
+	clearButton.addEventListener('click', () => {
+		minPanel.setWaiting();
+		maxPanel.setInactive();
+	});
 
-
-generateButton.addEventListener('click', () => {
-	if(!generateButton.classList.contains("active")) {
-		return;
-	}
-	let generateRandomNumber = function(min,max) {
-		return Math.floor(Math.random() * (max + 1 - min)) + min;
-	};
-	generatedNum = generateRandomNumber(minNum,maxNum);
-	mainPanel.textContent = generatedNum;
-});
-
+	generateButton.addEventListener('click', () => {
+		if(!generateButton.classList.contains("active")) {
+			return;
+		}
+		let generateRandomNumber = function(min,max) {
+			return Math.floor(Math.random() * (max + 1 - min)) + min;
+		};
+		generatedNum = generateRandomNumber(minPanel.num, maxPanel.num);
+		mainPanel.textContent = generatedNum;
+	});
+}
